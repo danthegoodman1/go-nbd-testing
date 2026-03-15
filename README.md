@@ -1,7 +1,17 @@
 # go-nbd-testing
 
-Testing github.com/pojntfx/go-nbd and adding a factor server so backends can be dynamically created with their respective export name.
+This repo implements a small replacement for `github.com/pojntfx/go-nbd/pkg/server` that opens backends through a factory instead of requiring a prebuilt backend up front.
 
-There's a hole in the current github.com/pojntfx/go-nbd/pkg/server in that there's no way for it to pass the export name to the Backend.
+The goal is multitenancy: the factory receives connection info, including the requested export name, so each client can get a different backend for the same server instance.
 
-This implements a server that uses a backend factory function to allow attaching the export name to the backend, effectively creating a NamedBackend
+Tests:
+
+```sh
+go test ./...
+```
+
+Real Linux client integration test:
+
+```sh
+NBD_REAL_LINUX_E2E=1 go test -run TestHandleWithLibnbdLinuxClients -v ./server
+```
